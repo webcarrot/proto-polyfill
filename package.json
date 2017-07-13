@@ -1,0 +1,71 @@
+{
+  "author": {
+    "email": "admin@webcarrot.pl",
+    "name": "webcarrot"
+  },
+  "bugs": {
+    "url": "https://github.com/webcarrot/proto-polyfill/issues"
+  },
+  "description": "Provide __proto__ for instances of Function class in old browsers ( IE 9, 10 )",
+  "esformatter": {
+    "plugins": [
+      "esformatter-quotes"
+    ],
+    "quotes": {
+      "avoidEscape": false,
+      "type": "double"
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {
+      "no-console": 1,
+      "no-underscore-dangle": 0,
+      "no-unused-vars": 1,
+      "quotes": 0
+    }
+  },
+  "installable": false,
+  "jshintConfig": {
+    "strict": true,
+    "unused": true
+  },
+  "keywords": [
+    "proto",
+    "static",
+    "class",
+    "es6",
+    "polyfill",
+    "ie9",
+    "ie10",
+    "babel",
+    "webpack"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/webcarrot/proto-polyfill/blob/master/LICENSE"
+    }
+  ],
+  "main": "./index.js",
+  "maintainers": [
+    {
+      "email": "admin@webcarrot.pl",
+      "name": "webcarrot"
+    }
+  ],
+  "name": "proto-polyfill",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webcarrot/proto-polyfill.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "version": "1.0.0"
+}
