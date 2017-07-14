@@ -92,7 +92,7 @@
 
   defineProperty(Z.prototype, "foo", {
     get: function() {
-      return "My special Z foo " + _get(this.__proto__.__proto__, "foo", this);
+      return "My special Z foo " + _get(Z.prototype.__proto__, "foo", this);
     },
     enumerable: false,
     configurable: true
