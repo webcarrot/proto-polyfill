@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<script src="../index.js"></script>
+<script>
+(function() {
+  // Babel like env...
+  var _get = function get(object, property, receiver) {
+    if (object === null)
+      object = Function.prototype;
+    var desc = Object.getOwnPropertyDescriptor(object, property);
+    if (desc === undefined) {
+      var parent = Object.getPrototypeOf(object);
+      if (parent === null) {
+        return undefined;
+      } else {
+        return get(parent, property, receiver);
+      }
+    } else if ("value" in desc) {
+      return desc.value;
+    } else {
+      var getter = desc.get;
+      if (getter === undefined) {
+        return undefined;
+      }
+      return getter.call(receiver);
+    }
+  };
+  var defineProperty = Object["defineProperty"];
+  var setPrototypeOf = Object["setPrototypeOf"];
+  function makeClass(subClass, superClass) {
+    subClass.prototype = Object.create(superClass.prototype, {
+      constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: false,
+        configurable: true
+      }
+    });
+    if (setPrototypeOf) {
+      setPrototypeOf(subClass, superClass);
+    } else {
+      subClass.__proto__ = superClass;
+    }
+  }
+
+  function X() {
+  }
+
+  defineProperty(X.prototype, "foo", {
+    get: function() {
+      return this.constructor.foo + " by instance!";
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  defineProperty(X, "foo", {
+    get: function() {
+      return "xFoo";
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  function Y() {
+    return Y.__proto__.apply(this, arguments);
+  }
+
+  makeClass(Y, X);
+
+  defineProperty(Y, "foo", {
+    get: function() {
+      return this.__proto__.foo + " > yFoo";
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  function Z() {
+    return Z.__proto__.apply(this, arguments);
+  }
+
+  makeClass(Z, Y);
+
+  defineProperty(Z, "foo", {
+    get: function() {
+      return this.__proto__.foo + " > zFoo";
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  defineProperty(Z.prototype, "foo", {
+    get: function() {
+      return "My special Z foo " + _get(this.__proto__.__proto__, "foo", this);
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  var x = new X();
+  var y = new Y();
+  var z = new Z();
+  console.log("x instanceof X", x instanceof X);
+  console.log("y instanceof X", y instanceof X);
+  console.log("y instanceof Y", y instanceof Y);
+  console.log("z instanceof X", z instanceof X);
+  console.log("z instanceof Y", z instanceof Y);
+  console.log("z instanceof Z", z instanceof Z);
+  console.log("x instanceof Z", x instanceof Z);
+  console.log("x.foo", x.foo);
+  console.log("y.foo", y.foo);
+  console.log("z.foo", z.foo);
+})();
+</script>
+</html>

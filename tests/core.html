@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<script src="../index.js"></script>
+<script>
+(function() {
+  // Parent class
+  function CoreParent() {
+  }
+  // CoreTest
+  function CoreTest() {
+    return CoreTest.__proto__.apply(this, arguments);
+  }
+  CoreTest.prototype = Object.create(CoreParent.prototype);
+  var coreTest = new CoreTest();
+  console.log("coreTest instanceof ParentClass", coreTest instanceof CoreParent);
+  console.log("coreTest instanceof Class", coreTest instanceof CoreTest);
+  console.log("coreTest.__proto__ === CoreTest.prototype", coreTest.__proto__ === CoreTest.prototype);
+  console.log("coreTest.__proto__.__proto__ === CoreTest.prototype.__proto__", coreTest.__proto__.__proto__ === CoreTest.prototype.__proto__);
+  console.log("CoreTest.prototype.__proto__ === CoreParent.prototype", CoreTest.prototype.__proto__ === CoreParent.prototype);
+})();
+</script>
+</html>
