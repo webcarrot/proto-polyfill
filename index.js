@@ -68,24 +68,6 @@
       configurable: false,
       writable: false
     });
-    if (!(O_PROTO in dest.prototype)) {
-      defineProperty(dest.prototype, O_PROTO, {
-        get: function() {
-          return this instanceof dest ? dest.prototype : sourceProto;
-        },
-        enumerable: false,
-        configurable: false
-      });
-    }
-    if (!(O_PROTO in sourceProto)) {
-      defineProperty(sourceProto, O_PROTO, {
-        get: function() {
-          return sourceProto.constructor.prototype;
-        },
-        enumerable: false,
-        configurable: false
-      });
-    }
     if (!(P_VALUE in dest)) {
       defineProperty(dest, P_VALUE, {
         value: {},
@@ -105,7 +87,25 @@
     }
   }
 
-  if (F[O_PROTO] === undefined && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
+  if (!(O_PROTO in O) && !(O_PROTO in F) && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
+    defineProperty(O.prototype, O_PROTO, {
+      get: function() {
+        if (this instanceof this.constructor) {
+          return this.constructor.prototype;
+        } else {
+          return this.constructor.__proto__;
+        }
+      },
+      set: function(source) {
+        if (this instanceof this.constructor) {
+          this.constructor.prototype = source;
+        } else {
+          this.constructor.__proto__ = source;
+        }
+      },
+      enumerable: false,
+      configurable: false
+    });
     defineProperty(F.prototype, O_PROTO, {
       get: function() {
         if (!(P_PROTO in this)) {
