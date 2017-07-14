@@ -104,6 +104,7 @@
       }
     }
   }
+
   if (F[O_PROTO] === undefined && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
     defineProperty(F.prototype, O_PROTO, {
       get: function() {
