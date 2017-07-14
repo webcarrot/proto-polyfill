@@ -6,6 +6,7 @@
   var P_FUNCT = "___proto_polyfill_funct___";
   var P_VALUE = "___proto_polyfill_value___";
 
+  var getPrototypeOf = O["getPrototypeOf"];
   var getOwnPropertyNames = O["getOwnPropertyNames"];
   var defineProperty = O["defineProperty"];
   var getOwnPropertyDescriptor = O["getOwnPropertyDescriptor"];
@@ -60,37 +61,71 @@
   }
 
   function setProto(dest, source) {
+    var sourceProto = source instanceof Function ? source.prototype : source;
     defineProperty(dest, P_PROTO, {
-      value: source,
+      value: sourceProto,
       enumerable: false,
       configurable: false,
       writable: false
     });
-    defineProperty(dest, P_VALUE, {
-      value: {},
-      enumerable: false,
-      configurable: false,
-      writable: false
-    });
-    var names = getOwnPropertyNames(source),
+    if (!(O_PROTO in dest.prototype)) {
+      defineProperty(dest.prototype, O_PROTO, {
+        get: function() {
+          return this instanceof dest ? dest.prototype : sourceProto;
+        },
+        enumerable: false,
+        configurable: false
+      });
+    }
+    if (!(O_PROTO in sourceProto)) {
+      defineProperty(sourceProto, O_PROTO, {
+        get: function() {
+          return sourceProto.constructor.prototype;
+        },
+        enumerable: false,
+        configurable: false
+      });
+    }
+    if (!(P_VALUE in dest)) {
+      defineProperty(dest, P_VALUE, {
+        value: {},
+        enumerable: false,
+        configurable: false,
+        writable: false
+      });
+    }
+    var names = getOwnPropertyNames(sourceProto),
       name,
       n = 0;
     for (; n < names.length; n++) {
       name = names[n];
       if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !dest.hasOwnProperty(name)) {
-        setProperty(dest, source, name);
+        setProperty(dest, sourceProto, name);
       }
     }
   }
-
-  if (O[O_PROTO] === undefined && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
+  if (F[O_PROTO] === undefined && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
     defineProperty(F.prototype, O_PROTO, {
       get: function() {
-        return this[P_PROTO] || F;
+        if (!(P_PROTO in this)) {
+          if (this.prototype) {
+            setProto(this, getPrototypeOf(this.prototype));
+          } else {
+            defineProperty(this, P_PROTO, {
+              value: F,
+              enumerable: false,
+              configurable: true,
+              writable: false
+            });
+          }
+        }
+        return this[P_PROTO].constructor;
       },
       set: function(source) {
         setProto(this, source);
-      }
+      },
+      enumerable: false,
+      configurable: false
     });
   }
 
