@@ -10,6 +10,7 @@
   var getOwnPropertyNames = O["getOwnPropertyNames"];
   var defineProperty = O["defineProperty"];
   var getOwnPropertyDescriptor = O["getOwnPropertyDescriptor"];
+  var create = O["create"];
 
   function prepareFunction(dest, func) {
     var sourceFunction = func[P_FUNCT] || func;
@@ -88,26 +89,46 @@
   }
 
   if (!(O_PROTO in O) && !(O_PROTO in F) && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
+    defineProperty(O, "create", {
+      value: function oCreate(source, props) {
+        var C = create(source, props);
+        defineProperty(C, O_PROTO, {
+          get: function cGetProto() {
+            if (this === C) {
+              return source;
+            } else {
+              return C;
+            }
+          },
+          enumerable: false,
+          configurable: false
+        });
+        return C;
+      },
+      enumerable: false,
+      configurable: false,
+      writable: false
+    });
     defineProperty(O.prototype, O_PROTO, {
-      get: function() {
+      get: function oGetProto() {
         if (this instanceof this.constructor) {
           return this.constructor.prototype;
         } else {
-          return this.constructor.__proto__;
+          return this.constructor.__proto__.prototype;
         }
       },
-      set: function(source) {
+      set: function oSetProto(source) {
         if (this instanceof this.constructor) {
           this.constructor.prototype = source;
         } else {
-          this.constructor.__proto__ = source;
+          this.constructor.__proto__.prototype = source;
         }
       },
       enumerable: false,
       configurable: false
     });
     defineProperty(F.prototype, O_PROTO, {
-      get: function() {
+      get: function fGetProto() {
         if (!(P_PROTO in this)) {
           if (this.prototype) {
             setProto(this, getPrototypeOf(this.prototype));
@@ -120,9 +141,13 @@
             });
           }
         }
-        return this[P_PROTO].constructor;
+        if (this[P_PROTO]) {
+          return this[P_PROTO].constructor;
+        } else {
+          return F;
+        }
       },
-      set: function(source) {
+      set: function fSetProto(source) {
         setProto(this, source);
       },
       enumerable: false,
