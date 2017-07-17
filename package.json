@@ -6,7 +6,7 @@
   "bugs": {
     "url": "https://github.com/webcarrot/proto-polyfill/issues"
   },
-  "description": "Provide __proto__ for instances of Function class in old browsers ( IE 9, 10 )",
+  "description": "Provide __proto__ with some limitations",
   "esformatter": {
     "plugins": [
       "esformatter-quotes"
@@ -67,5 +67,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

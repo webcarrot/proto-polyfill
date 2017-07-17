@@ -1,8 +1,8 @@
-<!doctype html>
-<html>
-<script src="../index.js"></script>
-<script>
-(function() {
+/* global describe it chai */
+
+describe("class-like", function() {
+  var assert = chai.assert;
+
   // Babel like env...
   var _get = function get(object, property, receiver) {
     if (object === null)
@@ -101,16 +101,64 @@
   var x = new X();
   var y = new Y();
   var z = new Z();
-  console.log("x instanceof X", x instanceof X);
-  console.log("y instanceof X", y instanceof X);
-  console.log("y instanceof Y", y instanceof Y);
-  console.log("z instanceof X", z instanceof X);
-  console.log("z instanceof Y", z instanceof Y);
-  console.log("z instanceof Z", z instanceof Z);
-  console.log("x instanceof Z", x instanceof Z);
-  console.log("x.foo", x.foo);
-  console.log("y.foo", y.foo);
-  console.log("z.foo", z.foo);
-})();
-</script>
-</html>
+
+  describe("x instanceof X", function() {
+    it("should return true", function() {
+      assert.equal(x instanceof X, true);
+    });
+  });
+
+  describe("y instanceof X", function() {
+    it("should return true", function() {
+      assert.equal(y instanceof X, true);
+    });
+  });
+
+  describe("y instanceof Y", function() {
+    it("should return true", function() {
+      assert.equal(y instanceof Y, true);
+    });
+  });
+
+  describe("z instanceof X", function() {
+    it("should return true", function() {
+      assert.equal(z instanceof X, true);
+    });
+  });
+
+  describe("z instanceof Y", function() {
+    it("should return true", function() {
+      assert.equal(z instanceof Y, true);
+    });
+  });
+
+  describe("z instanceof Z", function() {
+    it("should return true", function() {
+      assert.equal(z instanceof Z, true);
+    });
+  });
+
+  describe("x instanceof Z", function() {
+    it("should return false", function() {
+      assert.equal(x instanceof Z, false);
+    });
+  });
+
+  describe("x.foo", function() {
+    it("should return xFoo by instance!", function() {
+      assert.equal(x.foo, "xFoo by instance!");
+    });
+  });
+
+  describe("y.foo", function() {
+    it("should return xFoo > yFoo by instance!", function() {
+      assert.equal(y.foo, "xFoo > yFoo by instance!");
+    });
+  });
+
+  describe("z.foo", function() {
+    it("should return My special Z foo xFoo > yFoo > zFoo by instance!", function() {
+      assert.equal(z.foo, "My special Z foo xFoo > yFoo > zFoo by instance!");
+    });
+  });
+});
