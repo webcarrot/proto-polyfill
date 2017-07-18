@@ -12,14 +12,22 @@
   var getOwnPropertyDescriptor = O["getOwnPropertyDescriptor"];
   var create = O["create"];
 
-  function prepareFunction(dest, func) {
-    var sourceFunction = func[P_FUNCT] || func;
-    var newFunction = sourceFunction.bind(dest);
+  function getFunction(source, name, what) {
+    var info = getOwnPropertyDescriptor(source, name);
+    var func = info[what];
+    return func[P_FUNCT] || func;
+  }
+
+  function prepareFunction(dest, source, name, what) {
+    var newFunction = function() {
+      return getFunction(source, name, what).apply(dest, arguments);
+    };
     defineProperty(newFunction, P_FUNCT, {
-      value: sourceFunction,
+      get: function() {
+        return getFunction(source, name, what);
+      },
       enumerable: false,
-      configurable: false,
-      writable: false
+      configurable: false
     });
     return newFunction;
   }
@@ -30,20 +38,20 @@
     var hasGetter = info.get instanceof F;
     if (hasSetter && hasGetter) {
       defineProperty(dest, name, {
-        set: prepareFunction(dest, info.set),
-        get: prepareFunction(dest, info.get),
+        set: prepareFunction(dest, source, name, "set"),
+        get: prepareFunction(dest, source, name, "get"),
         enumerable: info.enumerable || false,
         configurable: true
       });
     } else if (hasSetter) {
       defineProperty(dest, name, {
-        set: prepareFunction(dest, info.set),
+        set: prepareFunction(dest, source, name, "set"),
         enumerable: info.enumerable || false,
         configurable: true
       });
     } else if (hasGetter) {
       defineProperty(dest, name, {
-        get: prepareFunction(dest, info.get),
+        get: prepareFunction(dest, source, name, "get"),
         enumerable: info.enumerable || false,
         configurable: true
       });
@@ -70,14 +78,12 @@
       configurable: false,
       writable: false
     });
-    if (!(P_VALUE in dest)) {
-      defineProperty(dest, P_VALUE, {
-        value: {},
-        enumerable: false,
-        configurable: false,
-        writable: false
-      });
-    }
+    defineProperty(dest, P_VALUE, {
+      value: {},
+      enumerable: false,
+      configurable: false,
+      writable: false
+    });
     if (!sourceConstructor) {
       return;
     }
@@ -134,11 +140,33 @@
           return constr.prototype || null;
         } else {
           var proto = constr.__proto__;
-          return this !== Object.prototype && proto.prototype === undefined ? Object.prototype : proto.prototype || null;
+          return this !== O.prototype && proto.prototype === undefined ? O.prototype : proto.prototype || null;
         }
       },
       set: function oSetProto(proto) {
-        setProto(this, proto);
+        if (proto && this instanceof O) {
+          defineProperty(this, P_PROTO, {
+            value: proto,
+            enumerable: false,
+            configurable: false,
+            writable: false
+          });
+          defineProperty(this, P_VALUE, {
+            value: {},
+            enumerable: false,
+            configurable: false,
+            writable: false
+          });
+          var names = getOwnPropertyNames(proto),
+            name,
+            n = 0;
+          for (; n < names.length; n++) {
+            name = names[n];
+            if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !this.hasOwnProperty(name)) {
+              setProperty(this, proto, name);
+            }
+          }
+        }
       },
       enumerable: false,
       configurable: false

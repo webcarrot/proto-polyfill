@@ -12,11 +12,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.0/chai.min.js"></script>
   <script>mocha.setup('bdd')</script>
   <script src="../index.js"></script>
+  <script src="./limitations.js"></script>
   <script src="./core.js"></script>
+  <script src="./core-plus.js"></script>
   <script src="./class-like.js"></script>
   <script>
     mocha.checkLeaks();
-    mocha.setup({ignoreLeaks: true}); 
+    mocha.setup({ignoreLeaks: true});
     mocha.run();
   </script>
 </body>

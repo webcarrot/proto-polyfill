@@ -151,7 +151,7 @@ describe("core", function() {
   });
 
 
-  describe("LIMITATION: update CoreParent.staticGetter", function() {
+  describe("update CoreParent.staticGetter", function() {
     beforeEach(function() {
       Object.defineProperty(CoreParent, "staticGetter", {
         get: function() {
@@ -180,122 +180,6 @@ describe("core", function() {
     });
     it("should return static", function() {
       assert.equal(CoreParent.staticGetter, "static");
-    });
-  });
-
-});
-
-describe("core+", function() {
-  var assert = chai.assert;
-
-  var native = Object.getPrototypeOf(Object);
-  var e = new Error();
-
-  describe("Error.__proto__", function() {
-    it("should return function () { [native code] }", function() {
-      assert.equal(Error.__proto__, native);
-    });
-  });
-
-  describe("Error.__proto__.__proto__", function() {
-    it("should return Object.prototype", function() {
-      assert.equal(Error.__proto__.__proto__, Object.prototype);
-    });
-  });
-
-  describe("Error.__proto__.__proto__.__proto__", function() {
-    it("should return null", function() {
-      assert.equal(Error.__proto__.__proto__.__proto__, null);
-    });
-  });
-
-  describe("e.__proto__", function() {
-    it("should return Error.prototype", function() {
-      assert.equal(e.__proto__, Error.prototype);
-    });
-  });
-
-  describe("e.__proto__.__proto__", function() {
-    it("should return Object.prototype", function() {
-      assert.equal(e.__proto__.__proto__, Object.prototype);
-    });
-  });
-
-  describe("e.__proto__.__proto__.__proto__", function() {
-    it("should return null", function() {
-      assert.equal(e.__proto__.__proto__.__proto__, null);
-    });
-  });
-
-  describe("(1).__proto__", function() {
-    it("should return Number.prototype", function() {
-      assert.equal((1).__proto__, Number.prototype);
-    });
-  });
-
-  describe("(1).__proto__.__proto__", function() {
-    it("should return Object.prototype", function() {
-      assert.equal((1).__proto__.__proto__, Object.prototype);
-    });
-  });
-
-  describe("(1).__proto__.__proto__.__proto__", function() {
-    it("should return null", function() {
-      assert.equal((1).__proto__.__proto__.__proto__, null);
-    });
-  });
-
-
-});
-
-
-describe("set __proto__ to objects \"without\" prototype...", function() {
-  var assert = chai.assert;
-  var o ,
-    X;
-  beforeEach(function() {
-    o = {
-      foo: function() {
-        return "oFoo";
-      }
-    };
-    X = function() {};
-    X.foo = function() {
-      return "xFoo";
-    };
-    X.bar = function() {
-      return "xBar";
-    };
-    o.__proto__ = X.prototype;
-  });
-
-  describe("LIMITATION: o instanceof X", function() {
-    it("should return true", function() {
-      assert.equal(o instanceof X, true);
-    });
-  });
-
-  describe("o.__proto__ === X.prototype", function() {
-    it("should return true", function() {
-      assert.equal(o.__proto__ === X.prototype, true);
-    });
-  });
-
-  describe("o.foo && X.foo", function() {
-    it("should return oFoo", function() {
-      assert.equal(o.foo(), "oFoo");
-    });
-    it("should return oFoo", function() {
-      assert.equal(X.foo(), "xFoo");
-    });
-  });
-
-  describe("o.bar && X.bar", function() {
-    it("should return xBar", function() {
-      assert.equal(o.bar(), "xBar");
-    });
-    it("should return oFoo", function() {
-      assert.equal(X.bar(), "xBar");
     });
   });
 
