@@ -115,8 +115,8 @@
         return C;
       },
       enumerable: false,
-      configurable: false,
-      writable: false
+      configurable: true,
+      writable: true
     });
     defineProperty(O.prototype, O_PROTO, {
       get: function oGetProto() {
