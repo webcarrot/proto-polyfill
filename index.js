@@ -61,7 +61,7 @@
           this[P_VALUE][name] = v;
         },
         get: function() {
-          return name in this[P_VALUE] ? this[P_VALUE][name] : source[name];
+          return name in this[P_VALUE] ? this[P_VALUE][name] : this === dest ? source[name] : dest[name];
         },
         enumerable: info.enumerable || false,
         configurable: true

@@ -62,11 +62,21 @@ describe("class-like", function() {
     configurable: true
   });
 
+  X.s = {
+    s: "x"
+  };
+  X.f = "X";
+
   function Y() {
     return Y.__proto__.apply(this, arguments);
   }
 
   makeClass(Y, X);
+
+  Y.s = {
+    s: "y"
+  };
+  Y.f = "Y";
 
   defineProperty(Y, "foo", {
     get: function() {
@@ -81,6 +91,8 @@ describe("class-like", function() {
   }
 
   makeClass(Z, Y);
+
+  Z.f = "Z";
 
   defineProperty(Z, "foo", {
     get: function() {
@@ -161,4 +173,32 @@ describe("class-like", function() {
       assert.equal(z.foo, "My special Z foo xFoo > yFoo > zFoo by instance!");
     });
   });
+
+  describe("x.constructor", function() {
+    it("s.s should return x!", function() {
+      assert.equal(x.constructor.s.s, "x");
+    });
+    it("f should return X!", function() {
+      assert.equal(x.constructor.f, "X");
+    });
+  });
+
+  describe("y.constructor", function() {
+    it("s.s should return y!", function() {
+      assert.equal(y.constructor.s.s, "y");
+    });
+    it("f should return Y!", function() {
+      assert.equal(y.constructor.f, "Y");
+    });
+  });
+
+  describe("z.constructor", function() {
+    it("s.s should return y!", function() {
+      assert.equal(z.constructor.s.s, "y");
+    });
+    it("f should return Z!", function() {
+      assert.equal(z.constructor.f, "Z");
+    });
+  });
+
 });
