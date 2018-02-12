@@ -2,6 +2,63 @@
 
 Provide `__proto__` with some limitations
 
+## browsers that need this polyfill
+
+In general old browsers that **not** provide legacy `__proto__` and **support** `Object.defineProperty`, `Object.getPrototypeOf`,  `Object.getOwnPropertyNames`, `Object.getOwnPropertyDescriptor` and `Object.create`:
+* IE 9
+* IE 10
+
+IE 8 is **not** supported.
+
+### why and when
+
+If you do things like:
+./tests/class-like.js
+or (ES6 version):
+```js
+class X {
+    static get foo() {
+      return "xFoo";
+    }
+    get foo() {
+      return this.constructor.foo + " by instance!";
+    }
+}
+X.s = {s:"x"};
+X.f = "X";
+class Y extends X {
+  static get foo() {
+    return this.__proto__.foo + " > yFoo";
+  }
+};
+Y.s = {
+  s: "y"
+}
+Y.f = "Y"
+class Z extends Y {
+  static get foo() {
+    return this.__proto__.foo + " > zFoo";
+  }
+  get foo() {
+    return "My special Z foo " + super.foo;
+  }
+}
+Z.f = "Z"
+var x = new X();
+var y = new Y();
+var z = new Z();
+console.log(x.foo); // xFoo by instance!
+console.log(y.foo); // xFoo > yFoo by instance!
+console.log(z.foo); // My special Z foo xFoo > yFoo > zFoo by instance!
+console.log(x.constructor.s.s); // x
+console.log(x.constructor.f); // X
+console.log(y.constructor.s.s); // y
+console.log(y.constructor.f); // Y
+console.log(z.constructor.s.s); // y
+console.log(z.constructor.f); // Z
+```
+...and code produced by compliler ( babel 6.x ) not work properly in old browsers like ie9-10.
+
 ## installation
 
 ``npm install --save-dev proto-polyfill``
