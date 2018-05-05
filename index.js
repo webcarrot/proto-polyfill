@@ -5,6 +5,7 @@
   var P_PROTO = "___proto_polyfill_proto___";
   var P_FUNCT = "___proto_polyfill_funct___";
   var P_VALUE = "___proto_polyfill_value___";
+  var IS_SYMBOL = /^Symbol\(/;
 
   var getPrototypeOf = O["getPrototypeOf"];
   var getOwnPropertyNames = O["getOwnPropertyNames"];
@@ -69,6 +70,18 @@
     }
   }
 
+  function setProperties(dest, source) {
+    var names = getOwnPropertyNames(source),
+      name,
+      n = 0;
+    for (; n < names.length; n++) {
+      name = names[n];
+      if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !IS_SYMBOL.test(name) && !dest.hasOwnProperty(name)) {
+        setProperty(dest, source, name);
+      }
+    }
+  }
+
   function setProto(dest, source) {
     var sourceProto = typeof source === "function" ? source.prototype : source;
     var sourceConstructor = typeof source === "function" ? source : sourceProto && sourceProto.constructor;
@@ -87,16 +100,10 @@
     if (!sourceConstructor) {
       return;
     }
-    var names = getOwnPropertyNames(sourceConstructor),
-      name,
-      n = 0;
-    for (; n < names.length; n++) {
-      name = names[n];
-      if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !dest.hasOwnProperty(name)) {
-        setProperty(dest, sourceConstructor, name);
-      }
-    }
+    setProperties(dest, sourceConstructor);
   }
+
+
   if (!(O_PROTO in O) && !(O_PROTO in F) && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
     defineProperty(O, "create", {
       value: function oCreate(source, props) {
@@ -157,15 +164,7 @@
             configurable: false,
             writable: false
           });
-          var names = getOwnPropertyNames(proto),
-            name,
-            n = 0;
-          for (; n < names.length; n++) {
-            name = names[n];
-            if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !this.hasOwnProperty(name)) {
-              setProperty(this, proto, name);
-            }
-          }
+          setProperties(this, proto);
         }
       },
       enumerable: false,

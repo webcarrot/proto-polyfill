@@ -109,6 +109,10 @@ X.prototype.newProp = "newProp";
 console.log(x.newProp); // invalid log: undefined should "newProp";
 ```
 
+### Pseudo Symbol()
+
+Pseudo `Symbol()` props are skipped (core-js Set polyfill use it)
+
 ## tests
 
 `./tests/index.html`
