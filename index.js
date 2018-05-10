@@ -5,7 +5,7 @@
   var P_PROTO = "___proto_polyfill_proto___";
   var P_FUNCT = "___proto_polyfill_funct___";
   var P_VALUE = "___proto_polyfill_value___";
-  var IS_SYMBOL = /^Symbol\(/;
+  var SYMBOL = "Symbol(";
 
   var getPrototypeOf = O["getPrototypeOf"];
   var getOwnPropertyNames = O["getOwnPropertyNames"];
@@ -76,7 +76,7 @@
       n = 0;
     for (; n < names.length; n++) {
       name = names[n];
-      if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && !IS_SYMBOL.test(name) && !dest.hasOwnProperty(name)) {
+      if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && name.indexOf(SYMBOL) !== 0 && !dest.hasOwnProperty(name)) {
         setProperty(dest, source, name);
       }
     }
