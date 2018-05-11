@@ -46,12 +46,7 @@
     "babel",
     "webpack"
   ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/webcarrot/proto-polyfill/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "main": "./index.js",
   "maintainers": [
     {
@@ -67,5 +62,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
-  "version": "1.6.0"
+  "version": "1.6.1"
 }
