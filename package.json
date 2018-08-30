@@ -8,9 +8,7 @@
   },
   "description": "Provide __proto__ with some limitations",
   "esformatter": {
-    "plugins": [
-      "esformatter-quotes"
-    ],
+    "plugins": ["esformatter-quotes"],
     "quotes": {
       "avoidEscape": false,
       "type": "double"
@@ -20,9 +18,7 @@
     "env": {
       "browser": true
     },
-    "extends": [
-      "eslint:recommended"
-    ],
+    "extends": ["eslint:recommended"],
     "rules": {
       "no-console": 1,
       "no-underscore-dangle": 0,
@@ -35,17 +31,7 @@
     "strict": true,
     "unused": true
   },
-  "keywords": [
-    "proto",
-    "static",
-    "class",
-    "es6",
-    "polyfill",
-    "ie9",
-    "ie10",
-    "babel",
-    "webpack"
-  ],
+  "keywords": ["proto", "static", "class", "es6", "polyfill", "ie9", "ie10", "babel", "webpack"],
   "license": "MIT",
   "main": "./index.js",
   "maintainers": [
@@ -62,5 +48,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
-  "version": "1.6.1"
+  "version": "1.7.0"
 }

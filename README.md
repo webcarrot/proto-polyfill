@@ -4,9 +4,10 @@ Provide `__proto__` with some limitations
 
 ## browsers that need this polyfill
 
-In general old browsers that **not** provide legacy `__proto__` and **support** `Object.defineProperty`, `Object.getPrototypeOf`,  `Object.getOwnPropertyNames`, `Object.getOwnPropertyDescriptor` and `Object.create`:
-* IE 9
-* IE 10
+In general old browsers that **not** provide legacy `__proto__` and **support** `Object.defineProperty`, `Object.getPrototypeOf`, `Object.getOwnPropertyNames`, `Object.getOwnPropertyDescriptor` and `Object.create`:
+
+- IE 9
+- IE 10
 
 IE 8 is **not** supported.
 
@@ -15,26 +16,27 @@ IE 8 is **not** supported.
 If you do things like:
 ./tests/class-like.js
 or (ES6 version):
+
 ```js
 class X {
-    static get foo() {
-      return "xFoo";
-    }
-    get foo() {
-      return this.constructor.foo + " by instance!";
-    }
+  static get foo() {
+    return "xFoo";
+  }
+  get foo() {
+    return this.constructor.foo + " by instance!";
+  }
 }
-X.s = {s:"x"};
+X.s = { s: "x" };
 X.f = "X";
 class Y extends X {
   static get foo() {
     return this.__proto__.foo + " > yFoo";
   }
-};
+}
 Y.s = {
   s: "y"
-}
-Y.f = "Y"
+};
+Y.f = "Y";
 class Z extends Y {
   static get foo() {
     return this.__proto__.foo + " > zFoo";
@@ -43,7 +45,7 @@ class Z extends Y {
     return "My special Z foo " + super.foo;
   }
 }
-Z.f = "Z"
+Z.f = "Z";
 var x = new X();
 var y = new Y();
 var z = new Z();
@@ -57,11 +59,12 @@ console.log(y.constructor.f); // Y
 console.log(z.constructor.s.s); // y
 console.log(z.constructor.f); // Z
 ```
+
 ...and code produced by compliler ( babel 6.x ) not work properly in old browsers like ie9-10.
 
 ## installation
 
-``npm install --save-dev proto-polyfill``
+`npm install --save-dev proto-polyfill`
 
 And use like polyfill...
 
@@ -73,9 +76,7 @@ Look at ./tests/limitations.js
 var x = {
   a: "xa"
 };
-function X() {
-
-}
+function X() {}
 X.prototype.a = "Xa";
 X.prototype.cv = "XCV";
 X.prototype.ab = function() {
@@ -85,7 +86,7 @@ Object.defineProperty(X.prototype, "c", {
   get: function() {
     return this.ab() + ":" + this.cv;
   }
-})
+});
 // no way to replace object prototype "in place" ?
 x.__proto__ = X.prototype;
 console.log(x instanceof X); // invalid log: false should true
@@ -112,6 +113,14 @@ console.log(x.newProp); // invalid log: undefined should "newProp";
 ### Pseudo Symbol()
 
 Pseudo `Symbol()` props are skipped (core-js Set polyfill use it)
+
+### Object.setPrototypeOf
+
+Only emultation
+
+### Object.getPrototypeOf
+
+Override to make super() work in Babel 7
 
 ## tests
 
