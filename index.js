@@ -20,11 +20,11 @@
   }
 
   function prepareFunction(dest, source, name, what) {
-    var newFunction = function() {
+    function newFunction() {
       return getFunction(source, name, what).apply(dest, arguments);
-    };
+    }
     defineProperty(newFunction, P_FUNCT, {
-      get: function() {
+      get: function pFunctionGet() {
         return getFunction(source, name, what);
       },
       enumerable: false,
@@ -76,7 +76,15 @@
       n = 0;
     for (; n < names.length; n++) {
       name = names[n];
-      if (name && name !== O_PROTO && name !== P_PROTO && name !== P_FUNCT && name !== P_VALUE && name.indexOf(SYMBOL) !== 0 && !dest.hasOwnProperty(name)) {
+      if (
+        name &&
+        name !== O_PROTO &&
+        name !== P_PROTO &&
+        name !== P_FUNCT &&
+        name !== P_VALUE &&
+        name.indexOf(SYMBOL) !== 0 &&
+        !dest.hasOwnProperty(name)
+      ) {
         setProperty(dest, source, name);
       }
     }
@@ -103,8 +111,23 @@
     setProperties(dest, sourceConstructor);
   }
 
-
-  if (!(O_PROTO in O) && !(O_PROTO in F) && getPrototypeOf instanceof F && getOwnPropertyNames instanceof F && defineProperty instanceof F && getOwnPropertyDescriptor instanceof F) {
+  if (
+    !(O_PROTO in O) &&
+    !(O_PROTO in F) &&
+    getPrototypeOf instanceof F &&
+    getOwnPropertyNames instanceof F &&
+    defineProperty instanceof F &&
+    getOwnPropertyDescriptor instanceof F
+  ) {
+    O["setPrototypeOf"] = function oSetPrototypeOf(obj, proto) {
+      if (obj instanceof O && obj !== null) {
+        obj.__proto__ = proto;
+      }
+      return obj;
+    };
+    O["getPrototypeOf"] = function oGetPrototypeOf(obj) {
+      return obj instanceof O && obj !== null ? obj.__proto__ : getPrototypeOf(obj);
+    };
     defineProperty(O, "create", {
       value: function oCreate(source, props) {
         var C = create(source, props);
@@ -135,12 +158,12 @@
           case "boolean":
             return Boolean.prototype;
         }
-        if ( (P_PROTO in this) ) {
+        if (P_PROTO in this) {
           return this[P_PROTO];
         }
         var constr = this.constructor;
         if (!constr) {
-          return null
+          return null;
         } else if (typeof constr.prototype === "function") {
           return constr;
         } else if (this instanceof constr) {
@@ -183,7 +206,7 @@
           }
         }
         if (this[P_PROTO]) {
-          return (typeof (this[P_PROTO])) === "function" ? this[P_PROTO] : this[P_PROTO].constructor;
+          return typeof this[P_PROTO] === "function" ? this[P_PROTO] : this[P_PROTO].constructor;
         } else {
           return null;
         }
@@ -195,5 +218,4 @@
       configurable: false
     });
   }
-
 })(Object, Function);
