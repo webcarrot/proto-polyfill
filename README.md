@@ -1,4 +1,4 @@
-# proto-polyfill
+# proto-polyfill &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/webcarrot/proto-polyfill/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/proto-polyfill.svg?style=flat)](https://www.npmjs.com/package/proto-polyfill)
 
 Provide `__proto__` with some limitations
 
